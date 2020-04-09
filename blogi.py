@@ -4,6 +4,51 @@ import getpass
 
 api_url = 'https://blogi-backend.herokuapp.com'
 
+class ANSIColors:
+    CEND      = '\33[0m'
+    CBOLD     = '\33[1m'
+    CITALIC   = '\33[3m'
+    CURL      = '\33[4m'
+    CBLINK    = '\33[5m'
+    CBLINK2   = '\33[6m'
+    CSELECTED = '\33[7m'
+
+    CBLACK  = '\33[30m'
+    CRED    = '\33[31m'
+    CGREEN  = '\33[32m'
+    CYELLOW = '\33[33m'
+    CBLUE   = '\33[34m'
+    CVIOLET = '\33[35m'
+    CBEIGE  = '\33[36m'
+    CWHITE  = '\33[37m'
+
+    CBLACKBG  = '\33[40m'
+    CREDBG    = '\33[41m'
+    CGREENBG  = '\33[42m'
+    CYELLOWBG = '\33[43m'
+    CBLUEBG   = '\33[44m'
+    CVIOLETBG = '\33[45m'
+    CBEIGEBG  = '\33[46m'
+    CWHITEBG  = '\33[47m'
+
+    CGREY    = '\33[90m'
+    CRED2    = '\33[91m'
+    CGREEN2  = '\33[92m'
+    CYELLOW2 = '\33[93m'
+    CBLUE2   = '\33[94m'
+    CVIOLET2 = '\33[95m'
+    CBEIGE2  = '\33[96m'
+    CWHITE2  = '\33[97m'
+
+    CGREYBG    = '\33[100m'
+    CREDBG2    = '\33[101m'
+    CGREENBG2  = '\33[102m'
+    CYELLOWBG2 = '\33[103m'
+    CBLUEBG2   = '\33[104m'
+    CVIOLETBG2 = '\33[105m'
+    CBEIGEBG2  = '\33[106m'
+    CWHITEBG2  = '\33[107m'
+
 def connect():
     global key
     key = getpass.getpass("Enter the API Key: ", stream=None)
@@ -11,10 +56,10 @@ def connect():
     response = requests.get(api_url + "/posts?key={}".format(key)).text
 
     if response == "Error: API Key is missing":
-        print("The API Key is Wrong\n")
+        print(f"{ANSIColors.CRED}The API Key is Wrong{ANSIColors.CEND}\n")
         return False
     else:
-        print("Authenticated Successfuly\n")
+        print(f"{ANSIColors.CGREEN}Authenticated Successfuly{ANSIColors.CEND}\n")
         return True
 
 try:
@@ -35,20 +80,21 @@ Type "help" for Help.
 
         if command.lower() == 'getposts':
             if connect():
+                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
                 response = requests.get(api_url + "/posts?key={}".format(key)).json()
-                print("Connecting...\n")
 
                 if response != []:
+                    print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
                     print("______________________________________________")
                     print("|  Post ID  |  Title  |  Author  |  Content  |")
                     print("|--------------------------------------------|")
                     for post in response:
                         print("|  " + str(post.get('bid')) + "  |  " + post.get("title") + "  |  " + post.get("author") + "  |  " + post.get("content") + "  |")
                     
-                    print("|--------------------------------------------|")
-                    print("")
+                    print("|--------------------------------------------|\n")
                 else:
-                    print("There are no Posts Right Now.\n")
+                    print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
+                    print(f"There are no Posts Right Now.\n")
             else:
                 continue
         
@@ -57,10 +103,11 @@ Type "help" for Help.
                 post_title = input("Post Title: ")
                 post_author = input("Post Author: ")
                 post_content = input("Post Content: ")
-                print("Connecting...\n")
+                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
 
                 response = requests.post(url=(api_url + "/posts?key={}".format(key)), json={'title': post_title, 'author': post_author, 'content': post_content}).text
-                print(response)
+                print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
+                print(f"{response}\n")
             else:
                 continue
 
@@ -71,20 +118,22 @@ Type "help" for Help.
                 post_new_title = input("Post new Title: ")
                 post_new_author = input("Post new Author: ")
                 post_new_content = input("Post new Content: ")
-                print("Connecting...\n")
+                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
 
                 response = requests.put(url=(api_url + "/posts/{}?key={}".format(str(selected_post_id), key)), json={'title': post_new_title, 'author': post_new_author, 'content': post_new_content}).text
-                print(response)
+                print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
+                print(f"{response}\n")
             else:
                 continue
 
         elif command.lower() == "deletepost":
             if connect():
                 selected_post_id = int(input("Enter the Post ID of the Post: "))
-                print("Connecting...\n")
+                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
 
                 response = requests.delete(url=(api_url + "/posts/{}?key={}".format(str(selected_post_id), key))).text
-                print(response)
+                print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
+                print(f"{response}\n")
             else:
                 continue
 
@@ -120,7 +169,7 @@ Other:
             continue
 
         else:
-            print(f'"{command}" is not a Valid Command')
+            print(f'{ANSIColors.CRED}"{command}" is not a Valid Command{ANSIColors.CEND}')
 except:
-    print("Error!")
+    print(f"{ANSIColors.CRED}Error!{ANSIColors.CEND}")
     quit()
