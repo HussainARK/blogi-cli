@@ -1,7 +1,7 @@
 blogi.spec
 build.cmd
+logo.ico
 
 __pycache__/
 build/
 dist/
-logo.ico
