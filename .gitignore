@@ -1,6 +1,8 @@
 blogi.spec
 build.cmd
 logo.ico
+README.txt
+Thanks.txt
 
 __pycache__/
 build/
