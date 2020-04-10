@@ -71,11 +71,11 @@ try:
     print("""\
 Welcome to the Blogi CLI Program!
 
-This Python Program is used to interact aith the Blogi API
+This Python Program is used to interact with the Blogi API
 
 You just need to type some Commands to get Started!
 
-Type "help" for Help.
+Type "help" to get Started.
         """)
 
     while command.lower() != "quit":
