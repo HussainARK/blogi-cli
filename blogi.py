@@ -1,4 +1,4 @@
-import requests, getpass, os
+import urllib.request, getpass, os, json
 
 # api_url is the API URL :)
 api_url = "https://blogi-backend.herokuapp.com"
@@ -54,8 +54,10 @@ def connect():
     global key
     key = getpass.getpass("Enter the API Key: ", stream=None)
 
-    response = requests.get(api_url + "/posts?key={}".format(key)).text
-
+    print(f"{ANSIColors.CYELLOW}Fetching the API...{ANSIColors.CEND}\n")
+    
+    response = urllib.request.urlopen(f'{api_url}/posts?key={key}').read().decode()
+    
     if response == "Error: API Key is missing":
         print(f"{ANSIColors.CRED}The API Key is Wrong{ANSIColors.CEND}\n")
         return False
@@ -81,20 +83,23 @@ Type "help" for Help.
 
         if command.lower() == 'getposts':
             if connect():
-                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
-                response = requests.get(api_url + "/posts?key={}".format(key)).json()
+                print(f"{ANSIColors.CYELLOW}Connecting to the API...{ANSIColors.CEND}\n")
+                
+                response = urllib.request.urlopen(f'{api_url}/posts?key={key}').read().decode()
+                
+                dict_response = json.loads(response)
 
-                if response != []:
-                    print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
+                print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
+
+                if dict_response != []:
                     print("______________________________________________")
                     print("|  Post ID  |  Title  |  Author  |  Content  |")
                     print("|--------------------------------------------|")
-                    for post in response:
+                    for post in dict_response:
                         print("|  " + str(post.get('bid')) + "  |  " + post.get("title") + "  |  " + post.get("author") + "  |  " + post.get("content") + "  |")
                     
                     print("|--------------------------------------------|\n")
                 else:
-                    print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
                     print(f"There are no Posts Right Now.\n")
             else:
                 continue
@@ -104,9 +109,22 @@ Type "help" for Help.
                 post_title = input("Post Title: ")
                 post_author = input("Post Author: ")
                 post_content = input("Post Content: ")
-                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
+                print(f"{ANSIColors.CYELLOW}Connecting to the API...{ANSIColors.CEND}\n")
 
-                response = requests.post(url=(api_url + "/posts?key={}".format(key)), json={'title': post_title, 'author': post_author, 'content': post_content}).text
+                data = {"title": post_title, "author": post_author, "content": post_content}
+                headers = {"Content-Type": "application/json"}
+                
+                dict_data = json.dumps(data)
+
+                request = urllib.request.Request(
+                    f'{api_url}/posts?key={key}', 
+                    data=bytes(dict_data.encode('utf-8')), 
+                    headers=headers, 
+                    method="POST"
+                )
+                
+                response = urllib.request.urlopen(request).read().decode()
+                
                 print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
                 print(f"{response}\n")
             else:
@@ -116,12 +134,25 @@ Type "help" for Help.
             if connect():
                 selected_post_id = int(input("Enter the Post ID of the Post: "))
                 
-                post_new_title = input("Post new Title: ")
-                post_new_author = input("Post new Author: ")
-                post_new_content = input("Post new Content: ")
-                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
+                new_post_title = input("Post new Title: ")
+                new_post_author = input("Post new Author: ")
+                new_post_content = input("Post new Content: ")
+                print(f"{ANSIColors.CYELLOW}Connecting to the API...{ANSIColors.CEND}\n")
 
-                response = requests.put(url=(api_url + "/posts/{}?key={}".format(str(selected_post_id), key)), json={'title': post_new_title, 'author': post_new_author, 'content': post_new_content}).text
+                data = {"title": new_post_title, "author": new_post_author, "content": new_post_content}
+                headers = {"Content-Type": "application/json"}
+                
+                dict_data = json.dumps(data)
+
+                request = urllib.request.Request(
+                    f'{api_url}/posts/{str(selected_post_id)}?key={key}', 
+                    data=bytes(dict_data.encode('utf-8')), 
+                    headers=headers, 
+                    method="PUT"
+                )
+
+                response = urllib.request.urlopen(request).read().decode()
+
                 print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
                 print(f"{response}\n")
             else:
@@ -130,9 +161,14 @@ Type "help" for Help.
         elif command.lower() == "deletepost":
             if connect():
                 selected_post_id = int(input("Enter the Post ID of the Post: "))
-                print(f"{ANSIColors.CYELLOW}Connecting...{ANSIColors.CEND}\n")
+                print(f"{ANSIColors.CYELLOW}Connecting to the API...{ANSIColors.CEND}\n")
+                request = urllib.request.Request(
+                    f'{api_url}/posts/{str(selected_post_id)}?key={key}', 
+                    method="DELETE"
+                )
 
-                response = requests.delete(url=(api_url + "/posts/{}?key={}".format(str(selected_post_id), key))).text
+                response = urllib.request.urlopen(request).read().decode()
+
                 print(f"{ANSIColors.CGREEN}Connected!{ANSIColors.CEND}\n")
                 print(f"{response}\n")
             else:
