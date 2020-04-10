@@ -1,10 +1,7 @@
 import requests, getpass, os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # api_url is the API URL :)
-api_url = os.getenv('API_URL')
+api_url = "https://blogi-backend.herokuapp.com"
 
 # ANSIColors which is the ANSI Color Codes for Coloring Terminal Text
 class ANSIColors:
