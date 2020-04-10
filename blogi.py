@@ -1,9 +1,9 @@
-import requests
-import os
-import getpass
+import requests, getpass, os
 
+# api_url is the API URL :)
 api_url = 'https://blogi-backend.herokuapp.com'
 
+# ANSIColors which is the ANSI Color Codes for Coloring Terminal Text
 class ANSIColors:
     CEND      = '\33[0m'
     CBOLD     = '\33[1m'
@@ -49,6 +49,7 @@ class ANSIColors:
     CBEIGEBG2  = '\33[106m'
     CWHITEBG2  = '\33[107m'
 
+# connect() function for connecting and Authenticating the User.
 def connect():
     global key
     key = getpass.getpass("Enter the API Key: ", stream=None)
