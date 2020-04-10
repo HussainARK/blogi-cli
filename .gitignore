@@ -4,3 +4,4 @@ build.cmd
 __pycache__/
 build/
 dist/
+logo.ico
