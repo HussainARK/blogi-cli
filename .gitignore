@@ -1,7 +1,7 @@
-dist/
 build/
 __pycache__/
+dist/
 
-.ENV
 blogi.spec
 build.cmd
+.ENV
