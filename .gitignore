@@ -1,7 +1,0 @@
-build/
-__pycache__/
-dist/
-
-blogi.spec
-build.cmd
-.ENV
