@@ -66,6 +66,8 @@ def connect():
         return True
 
 try:
+    os.system('cls')
+
     command = ''
 
     print("""\
